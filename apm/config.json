@@ -2,7 +2,7 @@
    "data_path": "data",
    "report_path": "..\\report",
    "adb_path": "D:\\sw\\Android\\sdk\\platform-tools\\adb.exe",
-   "package": "com.baidu.homework",
+   "package": "com.baidu.test",
    "info_path": "..\\info",
    "devices": [
       {
