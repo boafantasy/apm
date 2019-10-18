@@ -13,7 +13,7 @@ def cli():
     6. 使用"-p 文件名",在report目录生成同名html文件，内容为测试性能结果图表(数据为每5秒一个)
     """
     config = argparse.ArgumentParser(description="安卓设备性能日志收集工具",
-                                     formatter_class=argparse.RawDescriptionHelpFormatter,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter,  # epilog_message保留换行
                                      epilog=epilog_message)
     config.add_argument(
         "-e",

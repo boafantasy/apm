@@ -30,16 +30,18 @@ class AdbPackage(object):
         result = subprocess.getoutput(cmd).rstrip().split("\n")
         if len(result[0]) == 0:
             print("{} can not find the pid of {}".format(get_name_from_device(self.device), package))
-            raise AdbException("can not find pid of {}".format(package))
+            # raise AdbException("can not find pid of {}".format(package))
+            return None
         for ps_info in result:
             if ps_info.split()[-1] == package:
                 return ps_info.split()[1]
-        raise AdbException("can not find pid of {}".format(package))
+        # raise AdbException("can not find pid of {}".format(package))
 
     def get_ip(self):
         cmd = "{} -s {} shell \"ifconfig|grep -oe 'addr:172\.[0-9]*\.[0-9]*\.[0-9]*'\"".format(conf.adb_path, self.device)
         result = subprocess.getoutput(cmd)
         if len(result) == 0:
+            print("The phone NOT connected to WIFI")
             raise AdbException("The phone NOT connected to WIFI")
         else:
             return result.split(":")[1]
@@ -83,7 +85,8 @@ class AdbPackage(object):
                         vsync_overtime += int(render_time / 16.67)
             # print("-----fps------")
             if frame_count == 0:
-                _fps = 60
+                # print("{} 请打开开发者模式中的GPU渲染模式分析".format(get_name_from_device(self.device)))
+                _fps = None
             else:
                 _fps = int(frame_count * 60 / (frame_count + vsync_overtime))
             return _fps
@@ -102,7 +105,8 @@ class AdbPackage(object):
             mem = round(int(data) / 1024, 2)
             return mem
         else:
-            raise AdbException("can not get meminfo of {} from {}".format(package, self.device))
+            return None
+            # raise AdbException("can not get meminfo of {} from {}".format(package, self.device))
 
     def _get_cpu_jiff(self, pid):
         '''
@@ -120,9 +124,10 @@ class AdbPackage(object):
             cutime = res[15]
             cstime = res[16]
             result = int(utime) + int(stime) + int(cutime) + int(cstime)
+            return result
         except IndexError:
-            raise
-        return result
+            return None
+
 
     def _get_cpu_rate(self, package):
         pid = self._get_pid(package)
