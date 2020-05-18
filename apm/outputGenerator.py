@@ -6,6 +6,7 @@ from apm.data import OperatePick
 from pyecharts.charts import Line, Page
 from pyecharts import options as opts
 from pyecharts.globals import ThemeType
+
 op = OperatePick()
 conf = confLoad()
 
@@ -88,8 +89,8 @@ def generate_html(folder_path):
                              toolbox_opts=opts.ToolboxOpts())
     fps_line.set_global_opts(title_opts=opts.TitleOpts(title="FPS", subtitle="所有设备FPS数据(帧)"),
                              toolbox_opts=opts.ToolboxOpts())
-
-    for file in os.listdir(pickle_folder_path):
+    file_list = os.listdir(pickle_folder_path)
+    for file in file_list:
         device_name = file.split(".")[0]
         total_data[device_name] = op.read(pickle_folder_path + os.sep + file)
     longest_result = sorted([(len(total_data.get(k)), k) for k in total_data.keys()])[-1][1]  # get the longest result
@@ -109,17 +110,19 @@ def generate_html(folder_path):
             line.set_series_opts(label_opts=opts.LabelOpts(is_show=False),
                                  markpoint_opts=opts.MarkPointOpts(
                                      data=[
-                                            opts.MarkPointItem(type_="max", name="最大值"),
-                                            opts.MarkPointItem(type_="min", name="最小值")
-                                        ], symbol_size=40),
+                                         opts.MarkPointItem(type_="max", name="最大值"),
+                                         opts.MarkPointItem(type_="min", name="最小值")
+                                     ], symbol_size=40),
                                  markline_opts=opts.MarkLineOpts(
-                                                data=[
-                                                    opts.MarkLineItem(type_="average", name="平均值", )
-                                                ],
-                                                symbol="none"
+                                     data=[
+                                         opts.MarkLineItem(type_="average", name="平均值", )
+                                     ],
+                                     symbol="none"
                                  ))
         )
     page.add(cpu_line, mem_line, fps_line)
-    page.render(conf.report_path + os.sep + folder_path + ".html")
-    print("html文件生成在report目录下")
-
+    file_time = folder_path.split("_")[1:-1]
+    file_time_str = "{}月{}日_{}点{}分_".format(*file_time)
+    report_name = conf.report_path + os.sep + file_time_str + ".".join([i.split(".")[0] for i in file_list]) + ".html"
+    page.render(report_name)
+    print("\"{}\" 文件生成在report目录下".format(file_time_str + ".".join([i.split(".")[0] for i in file_list]) + ".html"))

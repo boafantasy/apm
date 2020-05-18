@@ -12,7 +12,7 @@ install_requires = [
 # 定义发布的包文件的信息
 setup(
     name="apm",            # 发布的包文件名称
-    version="0.1.3",                     # 发布的包的版本序号
+    version="0.1.5",                     # 发布的包的版本序号
     description="安卓性能监控工具",      # 发布包的描述信息
     author="daiyang",                  # 发布包的作者信息
     author_email="daiyang@zuoyebang.com",  # 作者联系邮箱信息

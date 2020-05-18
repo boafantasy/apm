@@ -41,8 +41,14 @@ class AdbPackage(object):
         cmd = "{} -s {} shell \"ifconfig|grep -oe 'addr:172\.[0-9]*\.[0-9]*\.[0-9]*'\"".format(conf.adb_path, self.device)
         result = subprocess.getoutput(cmd)
         if len(result) == 0:
-            print("The phone NOT connected to WIFI")
-            raise AdbException("The phone NOT connected to WIFI")
+            cmd = "{} -s {} shell \"netcfg|grep -oe '172\.[0-9]*\.[0-9]*\.[0-9]*'\"".format(conf.adb_path,
+                                                                                                   self.device)
+            result = subprocess.getoutput(cmd)
+            if len(result) == 0:
+                print("The phone NOT connected to WIFI")
+                raise AdbException("The phone NOT connected to WIFI")
+            else:
+                return result
         else:
             return result.split(":")[1]
 

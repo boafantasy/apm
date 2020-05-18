@@ -48,9 +48,11 @@ def get_device_info(device, device_name, q):
         if q.empty():
             timestamp = time.time()
             if int(timestamp) % 5 == 0:
+                # print(time.strftime("%H:%M:%S", time.localtime()))
                 cpu = get_device_cpu_info(device)
                 mem = get_device_mem_info(device)
                 fps = get_device_fps_info(device)
+                # print(time.strftime("%H:%M:%S", time.localtime()))
                 info_dict = dict(
                     time=time.strftime("%H:%M:%S", time.localtime(timestamp)),
                     device=device_name,
